@@ -6,6 +6,9 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,8 +19,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class JsonSerializer
 {
-	final static ObjectMapper objectMapper;
-
+	private final static ObjectMapper objectMapper;
+	private static final Logger LOG = LoggerFactory.getLogger(JsonSerializer.class);
 	static
 	{
 		SimpleModule module = new SimpleModule();
@@ -26,7 +29,7 @@ public class JsonSerializer
 			@Override
 			public void serialize(BigDecimal value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException
 			{
-				DecimalFormat df = new DecimalFormat("0.000000000000");
+				DecimalFormat df = new DecimalFormat("0.000000000000");//12位小数
 				gen.writeString(df.format(value));
 			}
 		});
@@ -60,6 +63,7 @@ public class JsonSerializer
 		}
 		catch (Exception ex)
 		{
+			LOG.error(ex.getMessage(), ex);
 			return null;
 		}
 
@@ -73,6 +77,7 @@ public class JsonSerializer
 		}
 		catch (Exception ex)
 		{
+			LOG.error(ex.getMessage(), ex);
 			return null;
 		}
 
@@ -80,6 +85,7 @@ public class JsonSerializer
 
 	/**
 	 * 需要建立一个对应的T类型class来进行反序列化操作。
+	 * 
 	 * @param <T>
 	 * @param jsonStr
 	 * @param objClass
@@ -93,6 +99,7 @@ public class JsonSerializer
 		}
 		catch (Exception ex)
 		{
+			LOG.error(ex.getMessage(), ex);
 			return null;
 		}
 	}
@@ -105,6 +112,7 @@ public class JsonSerializer
 		}
 		catch (Exception ex)
 		{
+			LOG.error(ex.getMessage(), ex);
 			return null;
 		}
 	}
